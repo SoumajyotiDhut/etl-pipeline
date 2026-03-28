@@ -1,5 +1,5 @@
 package com.etlpipeline.ingestion;
-
+import java.io.FileWriter;
 import com.etlpipeline.model.ColumnType;
 import com.etlpipeline.model.DataRecord;
 import com.etlpipeline.model.IngestionResult;
@@ -206,5 +206,42 @@ public class CsvIngestionService {
         if (val == null)             return defaultValue;
         if (val instanceof Boolean)  return (Boolean) val;
         return Boolean.parseBoolean(val.toString());
+    }
+    /**
+     * Write failed rows to an error log file.
+     * Creates a file next to the output named: filename.error.log
+     */
+    public void writeErrorLog(List<DataRecord> errorRecords,
+                              String sourceFilePath) {
+        if (errorRecords == null || errorRecords.isEmpty()) return;
+
+        String errorLogPath = sourceFilePath + ".error.log";
+
+        try (BufferedWriter writer = new BufferedWriter(
+                new FileWriter(errorLogPath))) {
+
+            writer.write("ETL Pipeline Error Log");
+            writer.newLine();
+            writer.write("Source file: " + sourceFilePath);
+            writer.newLine();
+            writer.write("Generated at: "
+                    + java.time.LocalDateTime.now());
+            writer.newLine();
+            writer.write("=".repeat(60));
+            writer.newLine();
+            writer.newLine();
+
+            for (DataRecord errorRecord : errorRecords) {
+                writer.write("Row " + errorRecord.getRowNumber()
+                        + ": " + errorRecord.getErrorMessage());
+                writer.newLine();
+            }
+
+            log.info("Error log written to: {}", errorLogPath);
+
+        } catch (IOException e) {
+            log.warn("Could not write error log to {}: {}",
+                    errorLogPath, e.getMessage());
+        }
     }
 }
