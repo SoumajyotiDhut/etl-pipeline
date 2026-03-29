@@ -1,0 +1,56 @@
+{
+  "pipelineId": "sales_etl_001",
+  "pipelineName": "Daily Sales ETL",
+  "tenantId": "tenant_123",
+  "description": "Extract sales data, filter invalid rows, aggregate by product, load to warehouse",
+  "source": {
+    "type": "csv",
+    "config": {
+      "file_path": "src/main/resources/sample-data/sales.csv",
+      "delimiter": ",",
+      "has_header": true,
+      "encoding": "utf-8"
+    }
+  },
+  "transformations": [
+    {
+      "type": "filter",
+      "config": {
+        "condition": "quantity > 0"
+      }
+    },
+    {
+      "type": "map",
+      "config": {
+        "operations": {
+          "total_amount": "quantity * price",
+          "product_id": "UPPER(product_id)"
+        }
+      }
+    },
+    {
+      "type": "aggregate",
+      "config": {
+        "group_by": ["product_id"],
+        "aggregations": {
+          "total_quantity": "SUM(quantity)",
+          "total_revenue": "SUM(total_amount)",
+          "transaction_count": "COUNT()"
+        }
+      }
+    }
+  ],
+  "destination": {
+    "type": "database",
+    "config": {
+      "table": "daily_sales_summary",
+      "write_mode": "append",
+      "batch_size": 1000
+    }
+  },
+  "execution": {
+    "batch_size": 1000,
+    "error_handling": "continue",
+    "timeout_seconds": 3600
+  }
+}

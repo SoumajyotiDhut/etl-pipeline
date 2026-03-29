@@ -1,0 +1,40 @@
+{
+  "pipelineId": "sales_report_001",
+  "pipelineName": "Sales Report to CSV",
+  "tenantId": "tenant_123",
+  "description": "Filter and export sales data to CSV file",
+  "source": {
+    "type": "csv",
+    "config": {
+      "file_path": "src/main/resources/sample-data/sales.csv",
+      "delimiter": ",",
+      "has_header": true,
+      "encoding": "utf-8"
+    }
+  },
+  "transformations": [
+    {
+      "type": "filter",
+      "config": {
+        "condition": "quantity > 0"
+      }
+    },
+    {
+      "type": "map",
+      "config": {
+        "operations": {
+          "total_amount": "quantity * price"
+        }
+      }
+    }
+  ],
+  "destination": {
+    "type": "file",
+    "config": {
+      "output_path": "src/main/resources/sample-data/sales_report_output.csv",
+      "format": "csv",
+      "delimiter": ",",
+      "include_header": true
+    }
+  }
+}

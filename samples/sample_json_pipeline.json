@@ -1,0 +1,38 @@
+{
+  "pipelineId": "products_etl_001",
+  "pipelineName": "Products JSON ETL",
+  "tenantId": "tenant_123",
+  "description": "Load product catalog from JSON file to database",
+  "source": {
+    "type": "json",
+    "config": {
+      "file_path": "src/main/resources/sample-data/products.json",
+      "format": "array"
+    }
+  },
+  "transformations": [
+    {
+      "type": "filter",
+      "config": {
+        "condition": "active == true"
+      }
+    },
+    {
+      "type": "map",
+      "config": {
+        "operations": {
+          "name": "UPPER(name)",
+          "category": "UPPER(category)"
+        }
+      }
+    }
+  ],
+  "destination": {
+    "type": "database",
+    "config": {
+      "table": "product_catalog",
+      "write_mode": "overwrite",
+      "batch_size": 500
+    }
+  }
+}

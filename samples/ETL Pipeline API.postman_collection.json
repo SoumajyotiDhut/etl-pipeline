@@ -1,0 +1,329 @@
+{
+  "info": {
+    "_postman_id": "ec445664-f9ae-4d36-83d2-2469223a76eb",
+    "name": "ETL Pipeline API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53440732",
+    "_collection_link": "https://go.postman.co/collection/53440732-ec445664-f9ae-4d36-83d2-2469223a76eb?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create Pipeline",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"pipelineId\": \"sales_etl_001\",\r\n  \"pipelineName\": \"Daily Sales ETL\",\r\n  \"tenantId\": \"tenant_123\",\r\n  \"description\": \"Filter and aggregate sales data\",\r\n  \"source\": {\r\n    \"type\": \"csv\",\r\n    \"config\": {\r\n      \"file_path\": \"src/main/resources/sample-data/sales.csv\",\r\n      \"delimiter\": \",\",\r\n      \"has_header\": true,\r\n      \"encoding\": \"utf-8\"\r\n    }\r\n  },\r\n  \"transformations\": [\r\n    {\r\n      \"type\": \"filter\",\r\n      \"config\": { \"condition\": \"quantity > 0\" }\r\n    },\r\n    {\r\n      \"type\": \"map\",\r\n      \"config\": {\r\n        \"operations\": {\r\n          \"total_amount\": \"quantity * price\"\r\n        }\r\n      }\r\n    },\r\n    {\r\n      \"type\": \"aggregate\",\r\n      \"config\": {\r\n        \"group_by\": [\"product_id\"],\r\n        \"aggregations\": {\r\n          \"total_quantity\": \"SUM(quantity)\",\r\n          \"total_revenue\": \"SUM(total_amount)\",\r\n          \"transaction_count\": \"COUNT()\"\r\n        }\r\n      }\r\n    }\r\n  ],\r\n  \"destination\": {\r\n    \"type\": \"database\",\r\n    \"config\": {\r\n      \"table\": \"daily_sales_summary\",\r\n      \"write_mode\": \"append\",\r\n      \"batch_size\": 1000\r\n    }\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/pipelines",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "pipelines"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Pipeline",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/pipelines/sales_etl_001",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "pipelines",
+            "sales_etl_001"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get All Pipelines",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/pipelines",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "pipelines"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update Pipeline",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"pipelineId\": \"sales_etl_001\",\r\n  \"pipelineName\": \"Daily Sales ETL Updated\",\r\n  \"tenantId\": \"tenant_123\",\r\n  \"description\": \"Updated pipeline description\",\r\n  \"source\": {\r\n    \"type\": \"csv\",\r\n    \"config\": {\r\n      \"file_path\": \"src/main/resources/sample-data/sales.csv\",\r\n      \"delimiter\": \",\",\r\n      \"has_header\": true\r\n    }\r\n  },\r\n  \"transformations\": [\r\n    {\r\n      \"type\": \"filter\",\r\n      \"config\": { \"condition\": \"quantity > 0\" }\r\n    }\r\n  ],\r\n  \"destination\": {\r\n    \"type\": \"database\",\r\n    \"config\": {\r\n      \"table\": \"daily_sales_summary\",\r\n      \"write_mode\": \"append\"\r\n    }\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/pipelines/sales_etl_001",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "pipelines",
+            "sales_etl_001"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Pipeline",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/pipelines/sales_etl_001",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "pipelines",
+            "sales_etl_001"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Run Pipeline",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/pipelines/sales_pipeline_001/run",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "pipelines",
+            "sales_pipeline_001",
+            "run"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Job Run Status",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/runs/{jobRunId}",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "runs",
+            "{jobRunId}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Pipeline Runs",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/api/v1/pipelines/sales_pipeline_001/runs",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "pipelines",
+            "sales_pipeline_001",
+            "runs"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test CSV Ingestion",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"file_path\": \"src/main/resources/sample-data/sales.csv\",\r\n  \"delimiter\": \",\",\r\n  \"has_header\": true,\r\n  \"encoding\": \"utf-8\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/ingest/csv",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "ingest",
+            "csv"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test JSON Ingestion",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"file_path\": \"src/main/resources/sample-data/products.json\",\r\n  \"format\": \"array\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/ingest/json",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "ingest",
+            "json"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test Transformation",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"source\": {\r\n    \"file_path\": \"src/main/resources/sample-data/sales.csv\",\r\n    \"delimiter\": \",\",\r\n    \"has_header\": true\r\n  },\r\n  \"transformations\": [\r\n    {\r\n      \"type\": \"filter\",\r\n      \"config\": { \"condition\": \"quantity > 0\" }\r\n    },\r\n    {\r\n      \"type\": \"map\",\r\n      \"config\": {\r\n        \"operations\": {\r\n          \"total_amount\": \"quantity * price\"\r\n        }\r\n      }\r\n    }\r\n  ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/transform/test",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "transform",
+            "test"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Test Destination",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"source\": {\r\n    \"file_path\": \"src/main/resources/sample-data/sales.csv\",\r\n    \"delimiter\": \",\",\r\n    \"has_header\": true\r\n  },\r\n  \"transformations\": [\r\n    {\r\n      \"type\": \"filter\",\r\n      \"config\": { \"condition\": \"quantity > 0\" }\r\n    }\r\n  ],\r\n  \"destination\": {\r\n    \"type\": \"file\",\r\n    \"config\": {\r\n      \"output_path\": \"src/main/resources/sample-data/output_sales.csv\",\r\n      \"format\": \"csv\",\r\n      \"include_header\": true\r\n    }\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/destination/test",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "destination",
+            "test"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
