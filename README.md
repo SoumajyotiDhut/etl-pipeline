@@ -234,8 +234,7 @@ samples/ETL_Pipeline_API.postman_collection.json
 
 ---
 
-## Built By
+## 👨‍💻 Built By
 
-Soumajyoti Dhut
-Internship Technical Assessment — Evolving Systems Ltd
-Multi-Tenant ETL Pipeline — Phase 1
+**Soumajyoti Dhut**  
+Internship Technical Assessment — Evolving Systems Ltd  
