@@ -239,26 +239,3 @@ samples/ETL_Pipeline_API.postman_collection.json
 Soumajyoti Dhut
 Internship Technical Assessment — Evolving Systems Ltd
 Multi-Tenant ETL Pipeline — Phase 1
-```
-
----
-
-### Step 4: Save the File
-
-Press **Ctrl + S**
-
----
-
-### Step 5: Verify It Looks Correct
-
-In IntelliJ you should now see `README.md` in the project panel next to `pom.xml`. The file icon will show the markdown logo (looks like a small M with a down arrow).
-
-Your structure should now look like:
-```
-etl-pipeline/
-├── samples/
-├── src/
-├── .gitignore
-├── HELP.md
-├── README.md      ← new file you just created
-└── pom.xml
