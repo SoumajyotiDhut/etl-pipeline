@@ -5,6 +5,18 @@ Java Spring Boot. Supports multiple data sources, configurable transformations,
 and multiple output destinations with full execution tracking.
 
 ---
+## Architecture Overview
+
+Client → Controller → Service → Execution Engine →  
+(Ingestion → Transformation → Destination)
+
+- Controller → Handles API requests
+- Service → Business logic
+- Execution Engine → Orchestrates ETL flow
+- Transformation Layer → Applies filter, map, aggregate
+- Destination Layer → Writes to DB or file
+
+This modular design ensures scalability and easy extensibility.
 
 ## Technology Stack
 
@@ -125,7 +137,38 @@ BUILD SUCCESS
 | POST | `/api/v1/destination/test` | Test full ETL flow |
 
 ---
+## Sample Pipeline Configuration
 
+```json
+{
+  "source": {
+    "type": "csv",
+    "config": {
+      "file_path": "sales.csv",
+      "has_header": true
+    }
+  },
+  "transformations": [
+    {
+      "type": "filter",
+      "config": {
+        "condition": "quantity > 0"
+      }
+    },
+    {
+      "type": "map",
+      "config": {
+        "operations": {
+          "total_amount": "quantity * price"
+        }
+      }
+    }
+  ],
+  "destination": {
+    "type": "database"
+  }
+}
+```
 ## Quick Start: Run Your First Pipeline
 
 ### Step 1: Create a Pipeline
@@ -158,7 +201,34 @@ Expected response when complete:
   }
 }
 ```
+---
 
+## Screenshots
+
+###  API Documentation (Swagger UI)
+
+#### Overview
+![Swagger Overview](docs/images/swagger-overview.jpeg)
+
+#### Endpoints
+![Swagger Endpoints](docs/images/swagger-endpoints.jpeg)
+
+Swagger UI provides interactive APIs for:
+- Pipeline creation and management
+- Data ingestion (CSV/JSON)
+- Transformation testing
+- Full ETL execution
+
+---
+
+###  ETL Output (PostgreSQL)
+
+![Postgres Result](docs/images/postgres-result.jpeg)
+
+The transformed data is successfully stored in PostgreSQL, showing:
+- Aggregated results (SUM, COUNT)
+- Cleaned and filtered records
+- Final processed dataset ready for analytics
 ---
 
 ## Project Structure
@@ -233,8 +303,17 @@ samples/ETL_Pipeline_API.postman_collection.json
 ```
 
 ---
+## Notes
 
-## 👨‍💻 Built By
+This project demonstrates real-world ETL pipeline design concepts including:
+
+- Scalable architecture
+- Configurable data pipelines
+- Dynamic transformation logic
+- Robust error handling and testing
+
+
+## Built By
 
 **Soumajyoti Dhut**  
 Internship Technical Assessment — Evolving Systems Ltd  
